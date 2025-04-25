@@ -5,13 +5,17 @@ export default function AvailablePlaces({ onSelectPlace }) {
   const [availablePlaces, setAvailablePlaces] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/places')
-      .then((response) => {
-        return response.json();
-      })
-      .then((responseData) => {
-        setAvailablePlaces(responseData.places);
-      });
+    /**
+     * We can use async, await keywords to make an async function.
+     * This way, rendering will wait for the data loading to complete.
+     */
+    async function fetchPlaces() {
+      const response = await fetch('http://localhost:3000/places');
+      const responseData = await response.json();
+      setAvailablePlaces(responseData.places);
+    }
+
+    fetchPlaces();
   }, [])
 
   return (

@@ -5,7 +5,7 @@ import express from 'express';
 
 const app = express();
 
-app.use(express.static('images'));
+app.use(express.static('images')); //exposes all the backend images to the root backend URL. Used in Places component.
 app.use(bodyParser.json());
 
 // CORS
