@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Places from './Places.jsx';
 import Error from './Error.jsx';
+import { sortPlacesByDistance } from '../loc.js'
 
 export default function AvailablePlaces({ onSelectPlace }) {
   /**
@@ -33,12 +34,21 @@ export default function AvailablePlaces({ onSelectPlace }) {
           throw new Error('Failed to fetch places');
         }
 
-        setAvailablePlaces(responseData.places);
+        // Function will be executed once the position is loaded.
+        navigator.geolocation.getCurrentPosition((position) => {
+          const sortedPlaces = sortPlacesByDistance(responseData.places, position.coords.latitude, position.coords.longitude);
+          setAvailablePlaces(sortedPlaces);
+          /**
+           * Move setIsFetching from previous position because JavaScript does not wait for the code to execute before this callback function is done.
+           * Also notice setIsFetching is catch.
+           */
+          setIsFetching(false);
+        });
+
       } catch (error) {
         setError({ message: error.message || 'Could not fetch places, please try again later.' });
+        setIsFetching(false);
       }
-
-      setIsFetching(false);
     }
 
     fetchPlaces();
