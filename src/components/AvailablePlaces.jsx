@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import Places from './Places.jsx';
 import Error from './Error.jsx';
 import { sortPlacesByDistance } from '../loc.js'
+import { fetchAvailablePlaces } from '../http.js'
+
 
 export default function AvailablePlaces({ onSelectPlace }) {
   /**
@@ -23,20 +25,11 @@ export default function AvailablePlaces({ onSelectPlace }) {
       setIsFetching(true);
 
       try {
-        const response = await fetch('http://localhost:3000/places');
-        const responseData = await response.json();
-
-        /**
-         * ok = 200 or 300 codes.
-         * !ok = 400 or 500 codes.
-         */
-        if (!response.ok) {
-          throw new Error('Failed to fetch places');
-        }
+        const places = await fetchAvailablePlaces();
 
         // Function will be executed once the position is loaded.
         navigator.geolocation.getCurrentPosition((position) => {
-          const sortedPlaces = sortPlacesByDistance(responseData.places, position.coords.latitude, position.coords.longitude);
+          const sortedPlaces = sortPlacesByDistance(places, position.coords.latitude, position.coords.longitude);
           setAvailablePlaces(sortedPlaces);
           /**
            * Move setIsFetching from previous position because JavaScript does not wait for the code to execute before this callback function is done.
