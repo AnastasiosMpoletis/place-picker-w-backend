@@ -24,7 +24,7 @@ export async function updateUserPlaces(places) {
 
     const responseData = await response.json();
 
-    if (!ok) {
+    if (!response.ok) {
         throw new Error('Failed to update user data.');
     }
 
