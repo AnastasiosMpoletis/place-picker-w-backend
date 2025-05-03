@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback } from 'react';
 
 import Places from './components/Places.jsx';
 import Modal from './components/Modal.jsx';
@@ -19,7 +19,8 @@ function App() {
   const {
     isFetching: isUserPlacesFetching,
     error: userPlacesError,
-    fetchedData: userPlaces
+    fetchedData: userPlaces,
+    setFetchedData: setUserPlaces
   } = useFetch(fetchUserPlaces, []);
 
   function handleStartRemovePlace(place) {
@@ -78,7 +79,7 @@ function App() {
     }
 
     setModalIsOpen(false);
-  }, [userPlaces]);
+  }, [userPlaces, setUserPlaces]); //since we use a custom hook, we should add setUserPlaces as a dependency to avoid the warning from esLint
 
   function handleError() {
     setErrorUpdatingPlaces(null);
